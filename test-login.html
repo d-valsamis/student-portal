@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        .result { margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 5px; white-space: pre-wrap; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Backend Login</h1>
+        <form id="loginForm">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required value="valsamis">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Stop the form from reloading the page
+
+            const formData = new FormData(event.target);
+            const data = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Sending request...';
+            resultDiv.className = 'result';
+
+            try {
+                // This is the crucial part: calling your API
+                const response = await fetch('http://localhost:8080/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Login was successful!
+                    resultDiv.textContent = 'SUCCESS! Response:\n' + JSON.stringify(result, null, 2);
+                    resultDiv.className = 'result success';
+                    
+                    // Save the token to use for other requests later
+                    localStorage.setItem('authToken', result.token);
+                    console.log('Token saved for future requests.');
+
+                } else {
+                    // Login failed (wrong password, user not found, etc.)
+                    resultDiv.textContent = 'ERROR: ' + result.error;
+                    resultDiv.className = 'result error';
+                }
+
+            } catch (error) {
+                // Network error (server down, wrong URL, CORS issue)
+                resultDiv.textContent = 'NETWORK ERROR: Could not connect to the server. Make sure it is running on port 8080.\n' + error;
+                resultDiv.className = 'result error';
+            }
+        });
+    </script>
+</body>
+</html>

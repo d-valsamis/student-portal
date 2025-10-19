@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Student Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2b6cb0 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #2575fc;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2575fc;
+        }
+
+        button {
+            width: 100%;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2c5282;
+        }
+
+        button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .success {
+            background: #e6f7ee;
+            color: #28a745;
+            border-left: 4px solid #28a745;
+        }
+
+        .error {
+            background: #fde8e8;
+            color: #dc3545;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>Student Portal</h1>
+            <p>Admin Panel Login</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+            
+            <button type="submit" id="loginBtn">Login</button>
+            <div class="loading" id="loading">Logging in...</div>
+        </form>
+        
+        <div class="response" id="loginResponse"></div>
+    </div>
+
+   <script>
+    const API_BASE = 'http://localhost:8080/api';
+    
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const loginBtn = document.getElementById('loginBtn');
+        const loading = document.getElementById('loading');
+        const response = document.getElementById('loginResponse');
+        
+        // Show loading state
+        loginBtn.disabled = true;
+        loading.style.display = 'block';
+        response.style.display = 'none';
+        
+       try {
+    // ADD DEBUGGING LINES HERE:
+    console.log('🔍 Sending login request...', { username, password });
+    console.log('🔍 URL:', `${API_BASE}/admin/login`);
+    
+    const result = await fetch(`${API_BASE}/admin/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+    });
+    
+    // ADD MORE DEBUGGING:
+    console.log('🔍 Response status:', result.status);
+    console.log('🔍 Response OK?:', result.ok);
+    
+    const data = await result.json();
+    console.log('🔍 Response data:', data);
+            
+            if (result.ok) {
+                // Store token and redirect to admin panel
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminUser', username);
+                showResponse(response, 'Login successful! Redirecting...', 'success');
+                
+                // FIXED: Redirect to the correct page
+                setTimeout(() => {
+                    window.location.href = 'admin-panel';  // ✅ CORRECTED
+                }, 1000);
+            } else {
+                throw new Error(data.error || 'Login failed');
+            }
+       } catch (error) {
+    console.error('🔍 CATCH BLOCK ERROR DETAILS:');
+    console.error('🔍 Error name:', error.name);
+    console.error('🔍 Error message:', error.message);
+    console.error('🔍 Error stack:', error.stack);
+    console.error('🔍 Full error object:', error);
+    
+    showResponse(response, `Error: ${error.message}`, 'error');
+} finally {
+            loginBtn.disabled = false;
+            loading.style.display = 'none';
+        }
+    });
+    
+    function showResponse(element, message, type) {
+        element.textContent = message;
+        element.className = `response ${type}`;
+        element.style.display = 'block';
+    }
+    
+    // Check if already logged in
+    if (localStorage.getItem('adminToken')) {
+        window.location.href = 'admin-panel';  // ✅ CORRECTED
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Personalized Learning</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a4b8c, #2b6cb0);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Flexible height classes table */
+        .classes-table {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .class-row {
+            transition: background-color 0.2s ease;
+        }
+
+        .class-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .class-row {
+                padding: 12px !important;
+            }
+            
+            .class-row > div {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            
+            .class-row > div > div {
+                margin-bottom: 8px;
+            }
+        }
+        
+        /* File links stack vertically on mobile */
+        .class-row .file-links {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .class-row .file-links a {
+            margin-bottom: 5px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 30px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            display: flex;
+            margin-top: 30px;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            flex: 0 0 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 20px;
+            color: #2b6cb0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e6e6e6;
+        }
+        
+        .filters {
+            list-style: none;
+        }
+        
+        .filters li {
+            margin-bottom: 15px;
+        }
+        
+        .filters a {
+            color: #4a5568;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .filters a:hover, .filters a.active {
+            background-color: #ebf4ff;
+            color: #2b6cb0;
+        }
+        
+        .filters a.active {
+            background-color: #2b6cb0 !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .filters i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            flex: 1;
+        }
+        
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title h2 {
+            color: #2d3748;
+            font-size: 1.5rem;
+        }
+        
+        .view-options select {
+            padding: 8px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            color: #4a5568;
+        }
+        
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .class-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .class-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4c8bf5, #2b6cb0);
+            color: white;
+        }
+        
+        .card-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .card-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .resources {
+            margin-bottom: 20px;
+        }
+        
+        .resources h4 {
+            margin-bottom: 10px;
+            color: #2d3748;
+            font-size: 1rem;
+        }
+        
+        .resource-list {
+            list-style: none;
+        }
+        
+        .resource-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-list a {
+            color: #4a5568;
+            text-decoration: none;
+            flex: 1;
+        }
+        
+        .resource-list a:hover {
+            color: #2b6cb0;
+        }
+        
+        .resource-list .date {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2b6cb0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2c5282;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-outline:hover {
+            background: #f7fafc;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 30px 0;
+            background: #2d3748;
+            color: white;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #cbd5e0;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #4a5568;
+            width: 100%;
+        }
+        
+        /* Login Form Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2b6cb0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            background: #2c5282;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .user-welcome {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ebf4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        
+        /* New styles for attendance and grades within subjects */
+        .subject-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .subject-stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border-left: 4px solid #2b6cb0;
+        }
+        
+        .subject-stat-card h4 {
+            color: #2b6cb0;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .subject-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+/* Assignments Styles */
+.assignment-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #2b6cb0;
+}
+
+.assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.assignment-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2b6cb0;
+    margin-bottom: 5px;
+}
+
+.assignment-due-date {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.assignment-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fffaf0;
+    color: #dd6b20;
+}
+
+.status-submitted {
+    background: #f0fff4;
+    color: #38a169;
+}
+
+.status-late {
+    background: #fff5f5;
+    color: #e53e3e;
+}
+
+.assignment-description {
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+
+.assignment-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.file-upload-container {
+    margin-top: 10px;
+}
+
+.file-input {
+    margin-bottom: 10px;
+}
+
+.upload-btn {
+    background: #2b6cb0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.upload-btn:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+}
+
+.submission-info {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f7fafc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.submission-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.submission-file a {
+    color: #2b6cb0;
+    text-decoration: none;
+}
+
+        .attendance-table, .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .attendance-table th, .grades-table th {
+            background: #2b6cb0;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .attendance-table td, .grades-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .attendance-table tr:last-child td, .grades-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .attendance-table tr:hover, .grades-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-present {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .status-absent {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        .status-late {
+            color: #dd6b20;
+            font-weight: bold;
+        }
+        
+        .grade-excellent {
+            color: #38a169;
+            font-weight: bold;
+        }
+        
+        .grade-good {
+            color: #68d391;
+            font-weight: bold;
+        }
+        
+        .grade-average {
+            color: #ecc94b;
+            font-weight: bold;
+        }
+        
+        .grade-poor {
+            color: #ed8936;
+            font-weight: bold;
+        }
+        
+        .grade-fail {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #718096;
+            font-style: italic;
+            background: white;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            margin: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4a5568;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            color: #2b6cb0;
+            border-bottom: 3px solid #2b6cb0;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: 1;
+                margin-bottom: 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .search-bar {
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .user-actions {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .user-actions a {
+                margin: 0;
+            }
+            
+            .attendance-table, .grades-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .tab-navigation {
+                flex-wrap: wrap;
+            }
+            
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section (Initially visible) -->
+    <div id="loginSection" class="login-container">
+        <div class="login-form">
+            <h2>Student Portal Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <button class="login-btn" onclick="login()">Login</button>
+            <div class="login-footer">
+                <p>Demo: Try 'student1' or 'student2' as username</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Initially hidden) -->
+    <div id="mainContent" class="hidden">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h1>Student Portal</h1>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search for classes, notes, or assignments...">
+                    </div>
+                    <div class="user-actions">
+                        <div class="user-welcome">
+                            <div class="user-avatar" id="userAvatar">JD</div>
+                            <span id="userWelcome">Welcome, John</span>
+                        </div>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <aside class="sidebar">
+                    <h2>My Dashboard</h2>
+                    <ul class="filters" id="myClassesList">
+                        <!-- Dynamically populated based on student -->
+                    </ul>
+                    <ul class="filters">
+                        <li>
+                            <a href="#" onclick="showOverview()" class="active" id="overviewLink">
+                                <i class="fas fa-home"></i> Overview
+                            </a>
+                        </li>
+                    </ul>
+                </aside>
+
+                <main class="content">
+                    <div class="section-title">
+                        <h2 id="contentTitle">My Classes & Assignments</h2>
+                    </div>
+
+                    <!-- Overview Section -->
+                    <div id="overviewSection">
+                        <div class="classes-grid" id="classesContainer">
+                            <!-- Dynamically populated based on student -->
+                        </div>
+                    </div>
+
+                    <!-- Subject Detail Section -->
+                    <div id="subjectDetailSection" class="hidden">
+                        <div class="tab-navigation">
+    <button class="tab-button active" onclick="switchTab('classes-tab')">Classes & Materials</button>
+    <button class="tab-button" onclick="switchTab('assignments-tab')">Assignments</button>
+    <button class="tab-button" onclick="switchTab('attendance-tab')">Attendance</button>
+    <button class="tab-button" onclick="switchTab('grades-tab')">Grades</button>
+</div>
+                        
+                        <div id="classes-tab" class="tab-content active">
+                            <div id="subjectClassesContainer">
+                                <!-- Classes and materials will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div id="attendance-tab" class="tab-content">
+                            <div id="subjectAttendanceContainer">
+                                <!-- Subject-specific attendance will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div id="grades-tab" class="tab-content">
+                            <div id="subjectGradesContainer">
+                                <!-- Subject-specific grades will be populated here -->
+                            </div>
+                        </div>
+                        <div id="assignments-tab" class="tab-content">
+                        <div id="subjectAssignmentsContainer">
+                                 <!-- Assignments will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Student Portal</h3>
+                        <p>Your personalized platform for all class materials, notes, and assignments.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Quick Links</h3>
+                        <a href="#" onclick="showOverview()">Home</a>
+                        <a href="#" onclick="showOverview()">My Classes</a>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Help & Support</h3>
+                        <a href="#">FAQ</a>
+                        <a href="#">Contact Support</a>
+                        <a href="#">Report an Issue</a>
+                    </div>
+                    <div class="copyright">
+                        <p>&copy; 2023 College Student Portal. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+ <script>
+    const API_BASE = 'http://localhost:8080/api';
+    let currentStudentId = null;
+    let currentSubjectId = null;
+    let currentSubjectName = null;
+
+    // Login function
+    async function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Login successful
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                
+                // Store the token for future API calls
+                localStorage.setItem('authToken', result.token);
+                currentStudentId = result.student.id;
+                
+                // Update user info
+                document.getElementById('userAvatar').textContent = result.student.name.charAt(0);
+                document.getElementById('userWelcome').textContent = `Welcome, ${result.student.name.split(' ')[0]}`;
+                
+                // Load the student's data
+                loadStudentData(result.student.id);
+                
+            } else {
+                alert(result.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login failed. Please try again.');
+        }
+    }
+
+// Start periodic token checking
+function startTokenChecker() {
+    // Clear any existing interval first
+    if (window.tokenCheckInterval) {
+        clearInterval(window.tokenCheckInterval);
+    }
+    
+    // Check token expiration every minute (60000 ms)
+    window.tokenCheckInterval = setInterval(() => {
+        // Only check if user is logged in (main content is visible)
+        if (document.getElementById('mainContent') && 
+            !document.getElementById('mainContent').classList.contains('hidden')) {
+            
+            if (checkTokenExpiration()) {
+                console.log('Token expired detected by periodic check');
+                handleSessionExpired();
+            }
+        }
+    }, 60000); // Check every 60 seconds
+}
+
+    // Load student's data
+    async function loadStudentData(studentId) {
+        try {
+            const subjectsResponse = await authenticatedFetch(`${API_BASE}/students/${studentId}/classes`);
+            const subjects = await subjectsResponse.json();
+            populateStudentSubjects(subjects);
+        } catch (error) {
+            console.error('Error loading student data:', error);
+        }
+    }
+
+    // Populate student's subjects
+    function populateStudentSubjects(subjects) {
+        const myClassesList = document.getElementById('myClassesList');
+        const classesContainer = document.getElementById('classesContainer');
+        
+        myClassesList.innerHTML = '';
+        classesContainer.innerHTML = '';
+        
+        subjects.forEach(subject => {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#" onclick="loadSubjectDetail(${subject.id}, '${subject.name.replace(/'/g, "\\'")}')">
+                <i class="fas fa-bookmark"></i> ${subject.name}
+            </a>`;
+            myClassesList.appendChild(li);
+        });
+        
+        renderSubjectOverview(subjects);
+    }
+
+    // Render overview of all subjects
+    function renderSubjectOverview(subjects) {
+        const classesContainer = document.getElementById('classesContainer');
+        classesContainer.innerHTML = '<h3>My Subjects Overview</h3>';
+        
+        if (subjects.length === 0) {
+            classesContainer.innerHTML += `
+                <div class="no-data">
+                    <p>No subjects enrolled.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        subjects.forEach(subject => {
+            const subjectCard = document.createElement('div');
+            subjectCard.className = 'class-card';
+            subjectCard.innerHTML = `
+                <div class="card-header">
+                    <h3>${subject.name}</h3>
+                    <p>Professor: ${subject.professor}</p>
+                </div>
+                <div class="card-content">
+                    <p>Click "View Subject Details" to see classes, attendance, and grades</p>
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick="loadSubjectDetail(${subject.id}, '${subject.name.replace(/'/g, "\\'")}')">
+                            View Subject Details
+                        </button>
+                    </div>
+                </div>
+            `;
+            classesContainer.appendChild(subjectCard);
+        });
+    }
+
+    // Load detailed view of a specific subject
+    async function loadSubjectDetail(subjectId, subjectName) {
+        currentSubjectId = subjectId;
+        currentSubjectName = subjectName;
+        
+        try {
+            // Update UI
+            const sidebarLinks = document.querySelectorAll('.filters a');
+            sidebarLinks.forEach(link => link.classList.remove('active'));
+            
+            const clickedLink = document.querySelector(`.filters a[onclick*="loadSubjectDetail(${subjectId},"]`);
+            if (clickedLink) {
+                clickedLink.classList.add('active');
+            }
+            
+            document.getElementById('contentTitle').textContent = `${subjectName}`;
+            
+            // Show subject detail section, hide overview
+            document.getElementById('overviewSection').classList.add('hidden');
+            document.getElementById('subjectDetailSection').classList.remove('hidden');
+            
+            // Reset tabs to classes tab
+            switchTab('classes-tab');
+            
+            // Load classes for this subject
+            await loadSubjectClasses(subjectId, subjectName);
+            
+        } catch (error) {
+            console.error('Error loading subject detail:', error);
+            alert('Error loading subject details');
+        }
+    }
+
+    // Load subject classes
+    async function loadSubjectClasses(subjectId, subjectName) {
+        try {
+            const response = await authenticatedFetch(`${API_BASE}/subjects/${subjectId}/classes`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const classes = await response.json();
+            renderSubjectClasses(subjectId, subjectName, classes);
+        } catch (error) {
+            console.error('Error loading subject classes:', error);
+            document.getElementById('subjectClassesContainer').innerHTML = `
+                <div class="no-data">
+                    <h3>Error Loading Classes</h3>
+                    <p>Unable to load classes for ${subjectName}. Please try again later.</p>
+                    <p><small>Error: ${error.message}</small></p>
+                </div>
+            `;
+        }
+    }
+
+    // Render subject classes
+    async function renderSubjectClasses(subjectId, subjectName, classes) {
+        const classesContainer = document.getElementById('subjectClassesContainer');
+        
+        if (!classes || classes.length === 0) {
+            classesContainer.innerHTML = `
+                <div class="no-data">
+                    <h3>No Classes Available</h3>
+                    <p>There are no classes available for ${subjectName} at the moment.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const currentDate = new Date().toISOString().split('T')[0];
+        const openClasses = classes.filter(cls => 
+            cls.opening_date <= currentDate && cls.closing_date >= currentDate
+        );
+        
+        const sortedClasses = openClasses.sort((a, b) => new Date(b.opening_date) - new Date(a.opening_date));
+        
+        if (sortedClasses.length === 0) {
+            classesContainer.innerHTML = `
+                <div class="no-data">
+                    <h3>No Currently Active Classes</h3>
+                    <p>There are no open classes for ${subjectName} at the moment.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        try {
+            const tableContent = await generateClassesTable(sortedClasses);
+            classesContainer.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3>${subjectName} - Active Classes</h3>
+                    <p>${sortedClasses.length} class(es) available</p>
+                </div>
+                <div class="classes-table" style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    ${tableContent}
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error generating table:', error);
+            classesContainer.innerHTML = `
+                <div class="no-data">
+                    <h3>Error Loading Classes</h3>
+                    <p>There was an error loading the class information.</p>
+                    <p><small>Error: ${error.message}</small></p>
+                </div>
+            `;
+        }
+    }
+
+    // Generate the table rows for classes
+    async function generateClassesTable(classes) {
+    let tableHTML = '';
+    
+    for (const cls of classes) {
+        try {
+            const filesResponse = await authenticatedFetch(`${API_BASE}/classes/${cls.id}/files`);
+            
+            let files = [];
+            if (filesResponse.ok) {
+                files = await filesResponse.json();
+            }
+            
+            tableHTML += `
+                <div class="class-row" style="border-bottom: 1px solid #e2e8f0; padding: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <strong style="color: #2b6cb0;">${cls.name}</strong>
+                            <div style="font-size: 0.9rem; color: #666;">
+                                Code: ${cls.code} | Opened: ${new Date(cls.opening_date).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                        <span style="font-size: 0.9rem; color: #666; min-width: 80px;">Files:</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${files.length > 0 ? 
+    files.map(file => {
+        const displayName = file.originalName || file.filename || 'Download File';
+        const fileName = file.systemName || file.filename || file.originalName;
+        return `
+            <button onclick="downloadFile(${cls.id}, '${fileName.replace(/'/g, "\\'")}', '${displayName.replace(/'/g, "\\'")}')"
+                    style="display: inline-flex; align-items: center; gap: 5px; 
+                           background: #f7fafc; padding: 6px 12px; 
+                           border-radius: 20px; text-decoration: none; 
+                           color: #2b6cb0; font-size: 0.85rem;
+                           border: 1px solid #e2e8f0; cursor: pointer;">
+                📄 ${displayName}
+            </button>
+        `;
+    }).join('') :
+    '<span style="color: #999; font-size: 0.9rem;">No files available</span>'
+}
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            console.error(`Error processing class ${cls.id}:`, error);
+            tableHTML += `
+                <div class="class-row" style="border-bottom: 1px solid #e2e8f0; padding: 15px;">
+                    <strong style="color: #2b6cb0;">${cls.name}</strong>
+                    <div style="color: #999; font-size: 0.9rem;">Error loading files</div>
+                </div>
+            `;
+        }
+    }
+    
+    return tableHTML;
+}
+
+// Download file with authentication using fetch
+async function downloadFile(classId, fileName, displayName) {
+    try {
+        console.log('Downloading file:', fileName, 'from class:', classId);
+        
+        const response = await authenticatedFetch(`${API_BASE}/classes/${classId}/files/${fileName}`);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+        }
+
+        // Get the file as blob
+        const blob = await response.blob();
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = displayName || fileName;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        console.log('File downloaded successfully:', displayName || fileName);
+        
+    } catch (error) {
+        console.error('Error downloading file:', error);
+        if (error.message.includes('Session expired') || error.message.includes('Authentication failed')) {
+            // Already handled by authenticatedFetch
+            return;
+        }
+        alert('Error downloading file. Please try again.');
+    }
+}
+
+    // Switch between tabs
+    async function switchTab(tabName) {
+        console.log(`Switching to tab: ${tabName} for subject ${currentSubjectId}`);
+        
+        // Update tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Find the correct tab button - handle both onclick formats
+        const tabButton = Array.from(document.querySelectorAll('.tab-button')).find(btn => 
+            btn.getAttribute('onclick')?.includes(tabName)
+        );
+        
+        if (tabButton) {
+            tabButton.classList.add('active');
+        }
+        
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabName).classList.add('active');
+        
+        // Load data for the selected tab if needed
+        if (tabName === 'attendance-tab') {
+            await loadSubjectAttendance();
+        } else if (tabName === 'grades-tab') {
+            await loadSubjectGrades();
+        } else if (tabName === 'assignments-tab') {
+            await loadSubjectAssignments();
+        }
+    }
+
+    // Load subject-specific attendance
+    async function loadSubjectAttendance() {
+        const container = document.getElementById('subjectAttendanceContainer');
+        container.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <div class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #2b6cb0; margin-bottom: 10px;"></div>
+                <p>Loading attendance data...</p>
+            </div>
+        `;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            console.log('Making attendance request with token:', token.substring(0, 20) + '...');
+
+            // Try the subject-specific endpoint first
+           let response = await authenticatedFetch(`${API_BASE}/students/${currentStudentId}/attendance?subjectId=${currentSubjectId}`);
+            
+            console.log('Attendance response status:', response.status);
+
+            // If subject-specific endpoint doesn't exist, fall back to all attendance
+            if (!response.ok && response.status === 404) {
+                console.log('Subject-specific attendance endpoint not found, falling back to all attendance');
+                response = await authenticatedFetch(`${API_BASE}/students/${currentStudentId}/attendance`);
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const allAttendanceData = await response.json();
+            console.log('Attendance data received:', allAttendanceData);
+            
+            // Filter for current subject if we got all attendance data
+            const attendanceData = allAttendanceData.filter(record => 
+                record.subject_id == currentSubjectId || record.subject_name === currentSubjectName
+            );
+            
+            renderSubjectAttendance(attendanceData);
+            
+        } catch (error) {
+            console.error('Error loading attendance data:', error);
+            container.innerHTML = `
+                <div class="no-data">
+                    <h3>Attendance Data Not Available</h3>
+                    <p>Unable to load attendance data for ${currentSubjectName}.</p>
+                    <p><small>Error: ${error.message}</small></p>
+                    <p><small>Please make sure you're logged in and try again.</small></p>
+                </div>
+            `;
+        }
+    }
+
+    // Render subject attendance
+    function renderSubjectAttendance(attendanceData) {
+        const container = document.getElementById('subjectAttendanceContainer');
+        
+        if (!attendanceData || attendanceData.length === 0) {
+            container.innerHTML = `
+                <div class="no-data">
+                    <h3>No Attendance Records</h3>
+                    <p>No attendance records found for ${currentSubjectName}.</p>
+                    <p><small>Attendance data may not have been recorded yet.</small></p>
+                </div>
+            `;
+            return;
+        }
+
+        // Calculate statistics for this subject
+        let presentCount = 0;
+        let absentCount = 0;
+        let lateCount = 0;
+        
+        attendanceData.forEach(record => {
+    const status = record.status || 'Present';
+    if (status === 'Present') presentCount++;
+    else if (status === 'Absent') absentCount++;
+    else if (status === 'Late') lateCount++;
+});
+
+const totalClasses = attendanceData.length;
+// Count both Present and Late as "attended" for the attendance rate
+const attendedCount = presentCount + lateCount;
+const attendanceRate = totalClasses > 0 ? Math.round((attendedCount / totalClasses) * 100) : 0;
+        
+        // Create statistics cards
+        const statsHTML = `
+            <div class="subject-stats-grid">
+                <div class="subject-stat-card">
+                    <h4>Attendance Rate</h4>
+                    <div class="subject-stat-value">${attendanceRate}%</div>
+                </div>
+                <div class="subject-stat-card">
+                    <h4>Present</h4>
+                    <div class="subject-stat-value">${presentCount}</div>
+                </div>
+                <div class="subject-stat-card">
+                    <h4>Absent</h4>
+                    <div class="subject-stat-value">${absentCount}</div>
+                </div>
+                <div class="subject-stat-card">
+                    <h4>Late</h4>
+                    <div class="subject-stat-value">${lateCount}</div>
+                </div>
+            </div>
+        `;
+        
+        // Create attendance table
+        let tableHTML = `
+            <h3>Attendance Details for ${currentSubjectName}</h3>
+            ${statsHTML}
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Class</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        attendanceData.forEach(record => {
+            const statusClass = `status-${record.status ? record.status.toLowerCase() : 'unknown'}`;
+            const className = record.class_name || record.class_id || 'N/A';
+            const date = record.date ? new Date(record.date).toLocaleDateString() : 'Unknown date';
+            
+            tableHTML += `
+                <tr>
+                    <td>${date}</td>
+                    <td>${className}</td>
+                    <td class="${statusClass}">${record.status || 'Unknown'}</td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `
+                </tbody>
+            </table>
+        `;
+        
+        container.innerHTML = tableHTML;
+    }
+
+    // Load subject-specific grades
+    async function loadSubjectGrades() {
+        const container = document.getElementById('subjectGradesContainer');
+        container.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <div class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #2b6cb0; margin-bottom: 10px;"></div>
+                <p>Loading grades data...</p>
+            </div>
+        `;
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            console.log('Making grades request with token:', token.substring(0, 20) + '...');
+
+            // Try the subject-specific endpoint first
+            let response = await authenticatedFetch(`${API_BASE}/students/${currentStudentId}/grades?subjectId=${currentSubjectId}`);
+            
+            console.log('Grades response status:', response.status);
+
+            // If subject-specific endpoint doesn't exist, fall back to all grades
+            if (!response.ok && response.status === 404) {
+                console.log('Subject-specific grades endpoint not found, falling back to all grades');
+                response = await authenticatedFetch(`${API_BASE}/students/${currentStudentId}/grades`);
+            }
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const allGradesData = await response.json();
+            console.log('Grades data received:', allGradesData);
+            
+            // Filter for current subject if we got all grades data
+            const gradesData = allGradesData.filter(grade => 
+                grade.subject_id == currentSubjectId || grade.subject_name === currentSubjectName
+            );
+            
+            renderSubjectGrades(gradesData);
+            
+        } catch (error) {
+            console.error('Error loading grades data:', error);
+            container.innerHTML = `
+                <div class="no-data">
+                    <h3>Grades Data Not Available</h3>
+                    <p>Unable to load grades data for ${currentSubjectName}.</p>
+                    <p><small>Error: ${error.message}</small></p>
+                    <p><small>Please make sure you're logged in and try again.</small></p>
+                </div>
+            `;
+        }
+    }
+
+    // Render subject grades
+    function renderSubjectGrades(gradesData) {
+    const container = document.getElementById('subjectGradesContainer');
+    
+    if (!gradesData || gradesData.length === 0) {
+        container.innerHTML = `
+            <div class="no-data">
+                <h3>No Grade Records</h3>
+                <p>No grade records found for ${currentSubjectName}.</p>
+                <p><small>Grades may not have been assigned yet.</small></p>
+            </div>
+        `;
+        return;
+    }
+
+    // Calculate statistics for this subject
+    let totalScore = 0;
+    let highestScore = 0;
+    let totalAssignmentsWithScores = 0;
+
+    gradesData.forEach(grade => {
+        const score = grade.score;
+        if (score !== null && !isNaN(score)) {
+            totalScore += parseFloat(score);
+            totalAssignmentsWithScores++;
+            if (score > highestScore) highestScore = score;
+        }
+    });
+
+    // Only calculate average if we have assignments with numeric scores
+    const calculatedAverage = totalAssignmentsWithScores > 0 ? (totalScore / totalAssignmentsWithScores).toFixed(1) : 'N/A';
+    const highestGradeDisplay = highestScore > 0 ? highestScore : 'N/A';
+
+    // Create statistics cards
+    const statsHTML = `
+        <div class="subject-stats-grid">
+            <div class="subject-stat-card">
+                <h4>Subject Average</h4>
+                <div class="subject-stat-value">${calculatedAverage}</div>
+            </div>
+            <div class="subject-stat-card">
+                <h4>Highest Grade</h4>
+                <div class="subject-stat-value">${highestGradeDisplay}</div>
+            </div>
+            <div class="subject-stat-card">
+                <h4>Assignments</h4>
+                <div class="subject-stat-value">${gradesData.length}</div>
+            </div>
+        </div>
+    `;
+    
+    // Create grades table
+    let tableHTML = `
+        <h3>Assignment Grades for ${currentSubjectName}</h3>
+        ${statsHTML}
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th>Assignment</th>
+                    <th>Score</th>
+                    <th>Grade</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    gradesData.forEach(grade => {
+        const score = grade.score || 0;
+        const letterGrade = grade.letter_grade || 'N/A';
+        const gradeClass = getGradeClass(score);
+        const assignmentName = grade.assignment_name || grade.title || 'Unnamed Assignment';
+        const feedback = grade.feedback || 'No feedback provided';
+        
+        tableHTML += `
+            <tr>
+                <td>${assignmentName}</td>
+                <td class="${gradeClass}">${score}</td>
+                <td class="${gradeClass}">${letterGrade}</td>
+                <td>${feedback}</td>
+            </tr>
+        `;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = tableHTML;
+}
+
+    // Get CSS class for grade based on score
+    function getGradeClass(score) {
+        if (score >= 90) return 'grade-excellent';
+        if (score >= 80) return 'grade-good';
+        if (score >= 70) return 'grade-average';
+        if (score >= 60) return 'grade-poor';
+        return 'grade-fail';
+    }
+
+    // Show overview section
+    function showOverview() {
+        document.getElementById('overviewSection').classList.remove('hidden');
+        document.getElementById('subjectDetailSection').classList.add('hidden');
+        
+        document.getElementById('contentTitle').textContent = 'My Classes & Assignments';
+        
+        // Update active link
+        updateActiveLink('overviewLink');
+    }
+
+    // Update active link in sidebar
+    function updateActiveLink(activeId) {
+        const links = document.querySelectorAll('.filters a');
+        links.forEach(link => link.classList.remove('active'));
+        document.getElementById(activeId).classList.add('active');
+    }
+
+async function loadSubjectAssignments() {
+    const container = document.getElementById('subjectAssignmentsContainer');
+    container.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <div class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #2b6cb0; margin-bottom: 10px;"></div>
+            <p>Loading assignments...</p>
+        </div>
+    `;
+
+    try {
+        console.log('🔍 Loading assignments for student:', currentStudentId, 'subject:', currentSubjectId);
+        
+        const response = await authenticatedFetch(`${API_BASE}/students/${currentStudentId}/assignments?subjectId=${currentSubjectId}`);
+        
+        console.log('🔍 Assignments response status:', response.status);
+        console.log('🔍 Assignments response headers:', response.headers);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const assignments = await response.json();
+        console.log('🔍 Assignments data received:', assignments);
+        
+        renderSubjectAssignments(assignments);
+        
+    } catch (error) {
+        console.error('Error loading assignments:', error);
+        container.innerHTML = `
+            <div class="no-data">
+                <h3>Assignments Not Available</h3>
+                <p>Unable to load assignments for ${currentSubjectName}.</p>
+                <p><small>Error: ${error.message}</small></p>
+                <button onclick="loadSubjectAssignments()" style="margin-top: 10px; padding: 8px 16px; background: #2b6cb0; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Render subject assignments
+function renderSubjectAssignments(assignments) {
+    const container = document.getElementById('subjectAssignmentsContainer');
+    
+    console.log('🔍 renderSubjectAssignments called with:', assignments);
+    
+    if (!assignments || assignments.length === 0) {
+        console.log('🔍 No assignments array or empty array');
+        container.innerHTML = `
+            <div class="no-data">
+                <h3>No Assignments</h3>
+                <p>No assignments found for ${currentSubjectName}.</p>
+                <p><small>Check back later for new assignments.</small></p>
+            </div>
+        `;
+        return;
+    }
+
+    console.log('🔍 Processing', assignments.length, 'assignments');
+
+    let assignmentsHTML = `
+        <div style="margin-bottom: 20px;">
+            <h3>Assignments for ${currentSubjectName}</h3>
+            <p>${assignments.length} assignment(s) assigned</p>
+        </div>
+    `;
+
+    assignments.forEach((assignment, index) => {
+        console.log(`🔍 Processing assignment ${index}:`, assignment);
+        
+        const dueDate = new Date(assignment.due_date);
+        const now = new Date();
+        const isOverdue = dueDate < now;
+        const status = assignment.submission_status || 'pending';
+        
+        let statusText = 'Pending';
+        let statusClass = 'status-pending';
+        
+        if (status === 'submitted') {
+            statusText = 'Submitted';
+            statusClass = 'status-submitted';
+        } else if (isOverdue) {
+            statusText = 'Overdue';
+            statusClass = 'status-late';
+        }
+
+        // Debug file attachment
+        console.log(`🔍 Assignment ${assignment.id} attachment:`, assignment.attachment);
+        console.log(`🔍 Assignment ${assignment.id} pdf_path:`, assignment.pdf_path);
+
+        assignmentsHTML += `
+            <div class="assignment-card">
+                <div class="assignment-header">
+                    <div>
+                        <div class="assignment-title">${assignment.title}</div>
+                        <div class="assignment-due-date">
+                            Due: ${dueDate.toLocaleDateString()} at ${dueDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            ${isOverdue ? ' (Overdue)' : ''}
+                        </div>
+                    </div>
+                    <div class="assignment-status ${statusClass}">${statusText}</div>
+                </div>
+                
+                ${assignment.description ? `
+                    <div class="assignment-description">
+                        ${assignment.description}
+                    </div>
+                ` : ''}
+                
+                ${assignment.attachment ? `
+    <div style="margin-bottom: 15px;">
+        <strong>Assignment File:</strong>
+        <button onclick="downloadAssignmentFile(${assignment.id}, '${assignment.attachment}', '${assignment.original_filename || assignment.attachment}')" 
+                style="margin-left: 10px; color: #2b6cb0; background: none; border: none; text-decoration: underline; cursor: pointer;">
+            📄 ${assignment.original_filename || assignment.attachment}
+        </button>
+    </div>
+` : ''}
+                
+                <div class="assignment-actions">
+                    ${status !== 'submitted' ? `
+                        <div class="file-upload-container">
+                            <input type="file" 
+                                   class="file-input" 
+                                   id="file-${assignment.id}"
+                                   accept=".pdf,.doc,.docx,.txt,.zip">
+                            <button class="upload-btn" onclick="uploadAssignment(${assignment.id})">
+                                Upload Submission
+                            </button>
+                        </div>
+                    ` : `
+                        <div class="submission-info">
+                            <strong>Submitted:</strong> ${assignment.submission_date ? new Date(assignment.submission_date).toLocaleDateString() : 'Unknown date'}
+                            ${assignment.submission_file ? `
+                                <div class="submission-file">
+                                    <span>File:</span>
+                                    <a href="${API_BASE}/submissions/${assignment.submission_id}/files/${assignment.submission_file}" 
+                                       download="${assignment.submission_file}">
+                                        📄 ${assignment.submission_file}
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    });
+
+    console.log('🔍 Final assignments HTML length:', assignmentsHTML.length);
+    container.innerHTML = assignmentsHTML;
+}
+// Upload assignment submission
+async function uploadAssignment(assignmentId) {
+    const fileInput = document.getElementById(`file-${assignmentId}`);
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Please select a file to upload.');
+        return;
+    }
+
+    const uploadBtn = fileInput.nextElementSibling;
+    const originalText = uploadBtn.textContent;
+    
+    try {
+        uploadBtn.textContent = 'Uploading...';
+        uploadBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('submissionFile', file);
+        formData.append('assignmentId', assignmentId);
+        formData.append('studentId', currentStudentId);
+
+        const response = await authenticatedFetch(`${API_BASE}/submissions`, {
+            method: 'POST',
+            body: formData
+            // Note: Don't set Content-Type header for FormData - browser will set it automatically
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Upload failed: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log('Upload successful:', result);
+        
+        alert('Assignment submitted successfully!');
+        
+        // Reload assignments to show the updated status
+        await loadSubjectAssignments();
+        
+    } catch (error) {
+        console.error('Error uploading assignment:', error);
+        if (error.message.includes('Session expired') || error.message.includes('Authentication failed')) {
+            return; // Already handled by authenticatedFetch
+        }
+        alert('Error uploading assignment: ' + error.message);
+    } finally {
+        uploadBtn.textContent = originalText;
+        uploadBtn.disabled = false;
+        fileInput.value = ''; // Clear the file input
+    }
+}
+
+// Download assignment file with authentication
+async function downloadAssignmentFile(assignmentId, fileName, originalName) {
+    try {
+        console.log('Downloading assignment file:', fileName, 'for assignment:', assignmentId);
+        
+        const response = await authenticatedFetch(`${API_BASE}/assignments/${assignmentId}/files/${fileName}`);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+        }
+
+        // Get the file as blob
+        const blob = await response.blob();
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = originalName || fileName;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        console.log('Assignment file downloaded successfully:', originalName || fileName);
+        
+    } catch (error) {
+        console.error('Error downloading assignment file:', error);
+        if (error.message.includes('Session expired') || error.message.includes('Authentication failed')) {
+            // Already handled by authenticatedFetch
+            return;
+        }
+        alert('Error downloading file. Please try again.');
+    }
+}
+
+    // Logout function
+    function logout() {
+        // Clear the periodic check
+    if (window.tokenCheckInterval) {
+        clearInterval(window.tokenCheckInterval);
+        window.tokenCheckInterval = null;
+    }
+        localStorage.removeItem('authToken');
+        currentStudentId = null;
+        currentSubjectId = null;
+        currentSubjectName = null;
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('mainContent').classList.add('hidden');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    }
+
+    // Enter key support for login
+    document.getElementById('password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') login();
+    });
+
+    // Debug function to check authentication status
+    function checkAuthStatus() {
+        const token = localStorage.getItem('authToken');
+        console.log('Auth token exists:', !!token);
+        if (token) {
+            console.log('Token length:', token.length);
+            console.log('Token preview:', token.substring(0, 20) + '...');
+            
+            // Decode the token payload to check expiration
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                console.log('Token payload:', payload);
+                console.log('Token expires:', new Date(payload.exp * 1000));
+            } catch (e) {
+                console.log('Could not decode token:', e.message);
+            }
+        }
+        
+        console.log('Current student ID:', currentStudentId);
+        console.log('Current subject ID:', currentSubjectId);
+    }
+
+// Check if token is expired or invalid
+function checkTokenExpiration() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        return true; // No token means expired
+    }
+    
+    try {
+        // Decode the token payload to check expiration
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Date.now() / 1000;
+        
+        if (payload.exp < currentTime) {
+            console.log('Token expired');
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.log('Invalid token:', error);
+        return true;
+    }
+}
+
+// Show logout message and redirect to login
+function handleSessionExpired() {
+    alert('Your session has expired. Please log in again.');
+    logout(); // This will clear the token and show login screen
+}
+
+// Enhanced fetch function with automatic token expiration handling
+async function authenticatedFetch(url, options = {}) {
+    // Check if token is expired before making request
+    if (checkTokenExpiration()) {
+        handleSessionExpired();
+        throw new Error('Session expired');
+    }
+    
+    const token = localStorage.getItem('authToken');
+    const defaultOptions = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        }
+    };
+    
+    // Only set Content-Type if it's not FormData
+    if (!(options.body instanceof FormData)) {
+        defaultOptions.headers['Content-Type'] = 'application/json';
+    }
+    
+    const mergedOptions = { ...defaultOptions, ...options };
+    
+    try {
+        const response = await fetch(url, mergedOptions);
+        
+        // Check for 401 Unauthorized or 403 Forbidden responses
+        if (response.status === 401 || response.status === 403) {
+            console.log('Authentication error:', response.status);
+            handleSessionExpired();
+            throw new Error('Authentication failed');
+        }
+        
+        return response;
+    } catch (error) {
+        if (error.message === 'Authentication failed' || error.message === 'Session expired') {
+            // Already handled by handleSessionExpired()
+            throw error;
+        }
+        // Re-throw other errors
+        throw error;
+    }
+}
+
+</script>
+
+</body>
+</html>

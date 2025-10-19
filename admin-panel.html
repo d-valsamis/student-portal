@@ -1,0 +1,2043 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal Admin Panel</title>
+        <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+      
+
+        body {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2b6cb0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2575fc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f0f7ff;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #2575fc;
+            color: #2575fc;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        button:hover {
+            background: #2c5282;
+        }
+        
+        .btn-secondary {
+            background: #718096;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6a11cb;
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: #2b6cb0;
+        }
+        
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .success {
+            background: #e6f7ee;
+            color: #28a745;
+            border-left: 4px solid #28a745;
+        }
+        
+        .error {
+            background: #fde8e8;
+            color: #dc3545;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .file-upload {
+            border: 2px dashed #cbd5e0;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: #2b6cb0;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #edf2f7;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .file-actions button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .remove-btn {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .remove-btn:hover {
+            background: #c53030;
+        }
+        
+        .help-text {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+.attendance-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-table th {
+    background-color: #f8fafc;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+}
+
+.attendance-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.attendance-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.attendance-select {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.attendance-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+     
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Student Portal Admin Panel</h1>
+            <p>Manage students, subjects, and classes easily</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="subjects">Subjects</div>
+            <div class="tab" data-tab="students">Students</div>
+            <div class="tab" data-tab="classes">Classes</div>
+            <div class="tab" data-tab="enrollment">Enrollment</div>
+            <div class="tab" data-tab="assignments">Assignments</div>
+            <div class="tab" data-tab="attendance">Attendance</div>
+            <div class="tab" data-tab="grades">Grades</div>
+            <div class="tab" data-tab="manage">Manage Records</div>
+        </div>
+        
+        <div class="content">
+            <!-- Subjects Tab -->
+            <div class="tab-content active" id="subjects-tab">
+                <div class="card">
+                    <h3>Add New Subject</h3>
+                    <form id="subjectForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="subjectName">Subject Name</label>
+                                <input type="text" id="subjectName" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="subjectProfessor">Professor</label>
+                                <input type="text" id="subjectProfessor" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="teacherEmail">Teacher Email (Optional)</label>
+                                <input type="email" id="teacherEmail" placeholder="teacher@example.com">
+                            </div>
+                            <div class="form-col">
+                                <label for="teacherTelephone">Teacher Telephone (Optional)</label>
+                                <input type="tel" id="teacherTelephone" placeholder="+1234567890">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subjectDescription">Description (Optional)</label>
+                            <textarea id="subjectDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit">Add Subject</button>
+                    </form>
+                    <div class="response" id="subjectResponse"></div>
+                </div>
+            </div>
+
+            <!-- Students Tab -->
+            <div class="tab-content" id="students-tab">
+                <div class="card">
+                    <h3>Add New Student</h3>
+                    <form id="studentForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="studentName">Full Name</label>
+                                <input type="text" id="studentName" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="studentUsername">Username</label>
+                                <input type="text" id="studentUsername" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="studentEmail">Email</label>
+                                <input type="email" id="studentEmail" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="studentPassword">Password</label>
+                                <input type="password" id="studentPassword" required>
+                            </div>
+                        </div>
+                        <button type="submit">Add Student</button>
+                    </form>
+                    <div class="response" id="studentResponse"></div>
+                </div>
+            </div>
+
+            <!-- Classes Tab -->
+            <div class="tab-content" id="classes-tab">
+                <div class="card">
+                    <h3>Add New Class</h3>
+                    <form id="classForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="classSubject">Subject</label>
+                                <select id="classSubject" required>
+                                    <option value="">Select a subject</option>
+                                </select>
+                            </div>
+                            <div class="form-col">
+                                <label for="classCode">Class Code</label>
+                                <input type="text" id="classCode" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="className">Class Name</label>
+                            <input type="text" id="className" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="openingDate">Opening Date</label>
+                                <input type="date" id="openingDate" required>
+                                <div class="help-text">Students can access from this date</div>
+                            </div>
+                            <div class="form-col">
+                                <label for="closingDate">Closing Date</label>
+                                <input type="date" id="closingDate" required>
+                                <div class="help-text">Students can access until this date</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="classFiles">Class Files (PDFs)</label>
+                            <div class="file-upload" id="classFilesUpload">
+                                <p>Click to upload class files or drag and drop</p>
+                                <input type="file" id="classFilesInput" accept=".pdf" multiple style="display: none;">
+                            </div>
+                            <div class="file-list" id="classFilesList"></div>
+                            <div class="help-text">Upload PDF files for this class. Students will be able to download these between the opening and closing dates.</div>
+                        </div>
+                        <button type="submit">Add Class</button>
+                    </form>
+                    <div class="response" id="classResponse"></div>
+                </div>
+            </div>
+            
+            <!-- Enrollment Tab -->
+            <div class="tab-content" id="enrollment-tab">
+                <div class="card">
+                    <h3>Enroll Student in Subject</h3>
+                    <form id="enrollmentForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="enrollStudent">Student</label>
+                                <select id="enrollStudent" required>
+                                    <option value="">Select a student</option>
+                                </select>
+                            </div>
+                            <div class="form-col">
+                                <label for="enrollSubject">Subject</label>
+                                <select id="enrollSubject" required>
+                                    <option value="">Select a subject</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit">Enroll Student</button>
+                    </form>
+                    <div class="response" id="enrollmentResponse"></div>
+                </div>
+            </div>
+            
+            <!-- Assignments Tab -->
+            <div class="tab-content" id="assignments-tab">
+                <div class="card">
+                    <h3>Add Assignment</h3>
+                    <form id="assignmentForm">
+                        <div class="form-group">
+                            <label for="assignmentSubject">Subject</label>
+                            <select id="assignmentSubject" required>
+                                <option value="">Select a subject</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentTitle">Assignment Title</label>
+                            <input type="text" id="assignmentTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentDescription">Description</label>
+                            <textarea id="assignmentDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentDueDate">Due Date</label>
+                            <input type="date" id="assignmentDueDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Assignment PDF (Optional)</label>
+                            <div class="file-upload" id="assignmentPdfUpload">
+                                <p>Click to upload PDF file or drag and drop</p>
+                                <input type="file" id="assignmentPdfFile" accept=".pdf" style="display: none;">
+                            </div>
+                            <div class="file-list" id="assignmentPdfList"></div>
+                            <div class="help-text">Upload the assignment sheet as a PDF for students to download.</div>
+                        </div>
+                        <button type="submit">Add Assignment</button>
+                    </form>
+                    <div class="response" id="assignmentResponse"></div>
+                </div>
+            </div>
+
+<!-- Attendance Tab -->
+<div class="tab-content" id="attendance-tab">
+    <div class="card">
+        <h3>Record Attendance</h3>
+        <form id="attendanceForm">
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="attendanceSubject">Subject</label>
+                    <select id="attendanceSubject" required onchange="loadAttendanceClasses()">
+                        <option value="">Select a subject</option>
+                    </select>
+                </div>
+                <div class="form-col">
+                    <label for="attendanceClass">Class</label>
+                    <select id="attendanceClass" required onchange="loadAttendanceStudents()">
+                        <option value="">Select a class</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="attendanceDate">Date</label>
+                    <input type="date" id="attendanceDate" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Student Attendance</label>
+                <div id="attendanceStudentsList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px;">
+                    <!-- Students will be loaded here -->
+                </div>
+            </div>
+            
+            <button type="submit">Save Attendance</button>
+        </form>
+        <div class="response" id="attendanceResponse"></div>
+    </div>
+</div>
+
+<!-- Grades Tab -->
+<div class="tab-content" id="grades-tab">
+    <div class="card">
+        <h3>Manage Assignment Grades</h3>
+        <form id="gradesForm">
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="gradesSubject">Subject</label>
+                    <select id="gradesSubject" required onchange="loadGradesAssignments()">
+                        <option value="">Select a subject</option>
+                    </select>
+                </div>
+                <div class="form-col">
+                    <label for="gradesAssignment">Assignment</label>
+                    <select id="gradesAssignment" required onchange="loadGradesStudents()">
+                        <option value="">Select an assignment</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Student Grades</label>
+                <div id="gradesStudentsList" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Students and grade inputs will be loaded here -->
+                </div>
+            </div>
+            
+            <button type="submit">Save Grades</button>
+        </form>
+        <div class="response" id="gradesResponse"></div>
+    </div>
+</div>
+
+           <!-- Manage Records Tab - WITH EDIT/DELETE FUNCTIONALITY -->
+<div class="tab-content" id="manage-tab">
+    <div class="card">
+        <h3>Manage Existing Records</h3>
+        
+        <!-- Subject Management -->
+        <div class="form-group">
+            <h4>Subjects</h4>
+            <select id="manageSubjectSelect">
+                <option value="">Select a subject to manage</option>
+            </select>
+            <div id="subjectManageSection" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <form id="editSubjectForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="editSubjectName">Subject Name</label>
+                            <input type="text" id="editSubjectName" required>
+                        </div>
+                        <div class="form-col">
+                            <label for="editSubjectProfessor">Professor</label>
+                            <input type="text" id="editSubjectProfessor" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="editTeacherEmail">Teacher Email</label>
+                            <input type="email" id="editTeacherEmail">
+                        </div>
+                        <div class="form-col">
+                            <label for="editTeacherTelephone">Teacher Telephone</label>
+                            <input type="tel" id="editTeacherTelephone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSubjectDescription">Description</label>
+                        <textarea id="editSubjectDescription" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Subject</button>
+                    <button type="button" class="btn remove-btn" onclick="deleteSubject()" style="margin-left: 10px;">Delete Subject</button>
+                </form>
+                <div class="response" id="subjectManageResponse" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- Student Management -->
+        <div class="form-group" style="margin-top: 30px;">
+            <h4>Students</h4>
+            <select id="manageStudentSelect">
+                <option value="">Select a student to manage</option>
+            </select>
+            <div id="studentManageSection" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <form id="editStudentForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="editStudentName">Full Name</label>
+                            <input type="text" id="editStudentName" required>
+                        </div>
+                        <div class="form-col">
+                            <label for="editStudentUsername">Username</label>
+                            <input type="text" id="editStudentUsername" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="editStudentEmail">Email</label>
+                            <input type="email" id="editStudentEmail" required>
+                        </div>
+                        <div class="form-col">
+                            <label for="editStudentPassword">New Password (leave blank to keep current)</label>
+                            <input type="password" id="editStudentPassword">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Student</button>
+                    <button type="button" class="btn remove-btn" onclick="deleteStudent()" style="margin-left: 10px;">Delete Student</button>
+                </form>
+                <div class="response" id="studentManageResponse" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+       <!-- Class Management -->
+<div class="form-group" style="margin-top: 30px;">
+    <h4>Classes</h4>
+    
+    <!-- ADD THIS SUBJECT FILTER -->
+    <div class="form-row">
+        <div class="form-col">
+            <label for="classSubjectFilter">Filter by Subject</label>
+            <select id="classSubjectFilter">
+                <option value="">All Subjects</option>
+                <!-- Subjects will be populated by JavaScript -->
+            </select>
+        </div>
+    </div>
+    
+    <select id="manageClassSelect">
+        <option value="">Select a class to manage</option>
+        <!-- Classes will be populated by JavaScript -->
+    </select>
+    
+    <div id="classManageSection" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <form id="editClassForm">
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="editClassSubject">Subject</label>
+                    <select id="editClassSubject" required>
+                        <option value="">Select a subject</option>
+                    </select>
+                </div>
+                <div class="form-col">
+                    <label for="editClassCode">Class Code</label>
+                    <input type="text" id="editClassCode" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="editClassName">Class Name</label>
+                <input type="text" id="editClassName" required>
+            </div>
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="editOpeningDate">Opening Date</label>
+                    <input type="date" id="editOpeningDate" required>
+                </div>
+                <div class="form-col">
+                    <label for="editClosingDate">Closing Date</label>
+                    <input type="date" id="editClosingDate" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Class</button>
+            <button type="button" class="btn remove-btn" onclick="deleteClass()" style="margin-left: 10px;">Delete Class</button>
+        </form>
+        <div class="response" id="classManageResponse" style="margin-top: 15px;"></div>
+    </div>
+</div>
+     
+        <div class="form-group" style="margin-top: 30px;">
+    <h4>Assignments</h4>
+    
+    <!-- Subject Filter for Assignments -->
+    <div class="form-row">
+        <div class="form-col">
+            <label for="assignmentSubjectFilter">Filter by Subject</label>
+            <select id="assignmentSubjectFilter">
+                <option value="">All Subjects</option>
+                <!-- Subjects will be populated by JavaScript -->
+            </select>
+        </div>
+    </div>
+    
+    <select id="manageAssignmentSelect">
+        <option value="">Select an assignment to manage</option>
+        <!-- Assignments will be populated by JavaScript -->
+    </select>
+    
+    <div id="assignmentManageSection" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <form id="editAssignmentForm">
+            <div class="form-group">
+                <label for="editAssignmentTitle">Assignment Title</label>
+                <input type="text" id="editAssignmentTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="editAssignmentDescription">Description</label>
+                <textarea id="editAssignmentDescription" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="editAssignmentDueDate">Due Date</label>
+                    <input type="date" id="editAssignmentDueDate" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Assignment</button>
+            <button type="button" class="btn remove-btn" onclick="deleteAssignment()" style="margin-left: 10px;">Delete Assignment</button>
+        </form>
+        <div class="response" id="assignmentManageResponse" style="margin-top: 15px;"></div>
+    </div>
+</div>
+ </div>
+</div>
+        <footer>
+            <p>Use this interface to manage your Student Portal database</p>
+        </footer>
+    </div>
+
+
+
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+
+    // Debug: Check if token exists
+    console.log('Admin Token:', localStorage.getItem('adminToken'));
+    console.log('Admin User:', localStorage.getItem('adminUser'));
+
+    // Enhanced authentication check
+    const adminToken = localStorage.getItem('adminToken');
+    if (!adminToken) {
+        console.log('No token found, redirecting to login');
+        window.location.href = '/adminlogin';
+        throw new Error('Not authenticated');
+    } else {
+        console.log('Token found, proceeding with admin panel');
+    }
+
+    // CORRECT makeRequest function (KEEP THIS ONE)
+    async function makeRequest(url, method, data = null) {
+        // Get the token from localStorage
+        const token = localStorage.getItem('adminToken');
+        console.log('Making request to:', url, 'with token:', token ? 'Present' : 'Missing');
+        
+        if (!token) {
+            // Redirect to login if no token
+            window.location.href = '/adminlogin';
+            throw new Error('No authentication token');
+        }
+        
+        const options = {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  // CRITICAL: Add this line
+            },
+        };
+        
+        if (data) options.body = JSON.stringify(data);
+        
+        try {
+            const response = await fetch(`${API_BASE}${url}`, options);
+            
+            // Check for authentication failure
+            if (response.status === 401) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUser');
+                window.location.href = '/adminlogin';
+                throw new Error('Authentication failed');
+            }
+            
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Request failed');
+            return result;
+        } catch (error) {
+            console.error('Request failed:', error);
+            throw error;
+        }
+    }
+
+// Add logout functionality
+function addLogoutButton() {
+    // Create logout button in header
+    const header = document.querySelector('header');
+    const logoutBtn = document.createElement('button');
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #e53e3e;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    `;
+    logoutBtn.onclick = function() {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        window.location.href = '/adminlogin';  // FIXED: was 'login.html'
+    };
+    header.style.position = 'relative';
+    header.appendChild(logoutBtn);
+    
+    // Add user info
+    const adminUser = localStorage.getItem('adminUser');
+    if (adminUser) {
+        const userInfo = document.createElement('div');
+        userInfo.textContent = `Logged in as: ${adminUser}`;
+        userInfo.style.cssText = `
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            color: white;
+            font-size: 0.9rem;
+        `;
+        header.appendChild(userInfo);
+    }
+}
+
+
+  
+    
+    // Class files management
+    let classFiles = [];
+    let assignmentPdf = null;
+
+   // ADD THIS SINGLE BLOCK INSTEAD
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded - initializing admin panel...');
+    
+    // Add logout button
+    addLogoutButton();
+    
+    // File upload handling
+    setupFileUploads();
+    
+    // Tab switching functionality
+    setupTabSwitching();
+    
+    // Form handlers
+    setupFormHandlers();
+    
+    // Load initial data
+    loadSubjects();
+    loadStudents();  // This is the key addition
+
+      // SET DEFAULT DATE FOR ATTENDANCE
+    setDefaultAttendanceDate();
+    
+    console.log('Admin panel initialization complete');
+});
+    function setupFileUploads() {
+        const classFilesInput = document.getElementById('classFilesInput');
+        const classFilesList = document.getElementById('classFilesList');
+        const classFilesUpload = document.getElementById('classFilesUpload');
+        const assignmentPdfFile = document.getElementById('assignmentPdfFile');
+        const assignmentPdfList = document.getElementById('assignmentPdfList');
+        const assignmentPdfUpload = document.getElementById('assignmentPdfUpload');
+
+        // Class files upload handling
+        classFilesUpload.addEventListener('click', () => classFilesInput.click());
+        
+        classFilesInput.addEventListener('change', () => {
+            if (classFilesInput.files.length > 0) {
+                for (let i = 0; i < classFilesInput.files.length; i++) {
+                    const file = classFilesInput.files[i];
+                    if (file.type !== 'application/pdf') {
+                        alert('Only PDF files are allowed.');
+                        continue;
+                    }
+                    classFiles.push(file);
+                    
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span>${file.name}</span>
+                        <div class="file-actions">
+                            <button class="remove-btn" data-filename="${file.name}">Remove</button>
+                        </div>
+                    `;
+                    classFilesList.appendChild(fileItem);
+                }
+                
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const fileName = e.target.getAttribute('data-filename');
+                        classFiles = classFiles.filter(f => f.name !== fileName);
+                        e.target.closest('.file-item').remove();
+                    });
+                });
+            }
+        });
+
+        // Assignment file upload handling
+        assignmentPdfUpload.addEventListener('click', () => assignmentPdfFile.click());
+        
+        assignmentPdfFile.addEventListener('change', () => {
+            if (assignmentPdfFile.files.length > 0) {
+                const file = assignmentPdfFile.files[0];
+                if (file.type !== 'application/pdf') {
+                    alert('Only PDF files are allowed.');
+                    return;
+                }
+                assignmentPdf = file;
+                
+                assignmentPdfList.innerHTML = `
+                    <div class="file-item">
+                        <span>${file.name}</span>
+                        <div class="file-actions">
+                            <button class="remove-btn" type="button">Remove</button>
+                        </div>
+                    </div>
+                `;
+                
+                assignmentPdfList.querySelector('.remove-btn').addEventListener('click', () => {
+                    assignmentPdf = null;
+                    assignmentPdfList.innerHTML = '';
+                    assignmentPdfFile.value = '';
+                });
+            }
+        });
+    }
+
+    function setupTabSwitching() {
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                
+                if (tab.dataset.tab === 'classes') {
+                    loadSubjects();
+                } else if (tab.dataset.tab === 'enrollment') {
+                    loadEnrollmentDropdowns();
+                } else if (tab.dataset.tab === 'assignments') {
+                    loadSubjects();
+                } else if (tab.dataset.tab === 'manage') {
+                    loadManagementData();
+                }  else if (tab.dataset.tab === 'attendance') {
+                    loadSubjectsForTab('attendanceSubject');
+                }  else if (tab.dataset.tab === 'grades') {
+                    loadSubjectsForTab('gradesSubject');
+                }
+            });
+        });
+    }
+
+function loadSubjectsForTab(selectId) {
+    const subjectSelect = document.getElementById(selectId);
+    if (subjectSelect && subjectSelect.options.length <= 1) { // Only if not already loaded
+        loadSubjects(); // This will populate all subject dropdowns
+    }
+}
+
+    function setupFormHandlers() {
+        document.getElementById('subjectForm').addEventListener('submit', handleSubjectSubmit);
+        document.getElementById('studentForm').addEventListener('submit', handleStudentSubmit);
+        document.getElementById('classForm').addEventListener('submit', handleClassSubmit);
+        document.getElementById('enrollmentForm').addEventListener('submit', handleEnrollmentSubmit);
+        document.getElementById('assignmentForm').addEventListener('submit', handleAssignmentSubmit);
+        document.getElementById('attendanceForm').addEventListener('submit', handleAttendanceSubmit);
+        document.getElementById('gradesForm').addEventListener('submit', handleGradesSubmit);
+    }
+
+   
+    function loadSubjectsForTab(selectId) {
+    const subjectSelect = document.getElementById(selectId);
+    if (subjectSelect && subjectSelect.options.length <= 1) { // Only if not already loaded
+        loadSubjects(); // This will populate all subject dropdowns
+    }
+}
+
+   async function uploadFile(url, formData) {
+    try {
+        const token = localStorage.getItem('adminToken');
+        console.log('Uploading file to:', url, 'with token:', token ? 'Present' : 'Missing');
+        
+        const response = await fetch(`${API_BASE}${url}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`  // CRITICAL: Include token
+            },
+            body: formData  // No Content-Type header for FormData
+        });
+        
+        console.log('Upload response status:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Upload failed: ${response.status} - ${errorText}`);
+        }
+        
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Upload error:', error);
+        throw error;
+    }
+}
+
+    async function loadSubjects() {
+    try {
+        console.log('Loading subjects for dropdowns...');
+        const subjects = await makeRequest('/admin/subjects', 'GET');
+        
+        // These are the actual dropdown IDs from your HTML:
+        const dropdowns = [
+            document.getElementById('classSubject'),           // Classes tab
+            document.getElementById('enrollSubject'),          // Enrollment tab  
+            document.getElementById('assignmentSubject'),      // Assignments tab
+            document.getElementById('manageSubjectSelect'),    // Manage tab
+            document.getElementById('classSubjectFilter'),      // Class filter
+            document.getElementById('attendanceSubject'),      // ADD THIS - Attendance tab
+            document.getElementById('gradesSubject')           // ADD THIS - Grades tab
+        ];
+        
+        dropdowns.forEach(subjectSelect => {
+            if (subjectSelect) {
+                console.log('Populating dropdown:', subjectSelect.id);
+                subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.id;
+                    option.textContent = `${subject.name}`;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        });
+        
+        console.log('Subjects loaded successfully into all dropdowns');
+    } catch (error) {
+        console.error('Error loading subjects:', error);
+    }
+}
+
+    async function loadEnrollmentDropdowns() {
+        try {
+            const students = await makeRequest('/students', 'GET');
+            const subjects = await makeRequest('/admin/subjects', 'GET');
+            
+            const studentSelect = document.getElementById('enrollStudent');
+            studentSelect.innerHTML = '<option value="">Select a student</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.username})`;
+                studentSelect.appendChild(option);
+            });
+            
+            const subjectSelect = document.getElementById('enrollSubject');
+            subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = `${subject.name} (Prof. ${subject.professor})`;
+                subjectSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading enrollment data:', error);
+        }
+    }
+
+async function loadAttendanceClasses() {
+    const subjectId = document.getElementById('attendanceSubject').value;
+    const classSelect = document.getElementById('attendanceClass');
+    
+    if (!subjectId) {
+        classSelect.innerHTML = '<option value="">Select a class</option>';
+        return;
+    }
+    
+    try {
+        const classes = await makeRequest(`/classes?subject_id=${subjectId}`, 'GET');
+
+
+        classSelect.innerHTML = '<option value="">Select a class</option>';
+        
+        const filteredClasses = classes.filter(cls => cls.subject_id == subjectId);
+        
+        filteredClasses.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls.id;
+            option.textContent = `${cls.code} - ${cls.name} (${cls.opening_date})`;
+            classSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading classes for attendance:', error);
+    }
+}
+
+async function loadAttendanceStudents() {
+    const classId = document.getElementById('attendanceClass').value;
+    const subjectId = document.getElementById('attendanceSubject').value;
+    const studentsList = document.getElementById('attendanceStudentsList');
+    
+    if (!classId || !subjectId) {
+        studentsList.innerHTML = '<p>Please select both subject and class</p>';
+        return;
+    }
+    
+    try {
+        // Get students enrolled in this subject
+        const enrolledStudents = await makeRequest(`/admin/enrollments?subject_id=${subjectId}`, 'GET');
+        
+        if (enrolledStudents.length === 0) {
+            studentsList.innerHTML = '<p>No students enrolled in this subject</p>';
+            return;
+        }
+        
+        // Create a table with default "Present" for all students
+        let html = `
+            <div class="attendance-table-container">
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Attendance Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        enrolledStudents.forEach(enrollment => {
+            const student = enrollment.student;
+            html += `
+                <tr>
+                    <td>${student.name}</td>
+                    <td>
+                        <select 
+                            id="attendance_${student.id}" 
+                            name="attendance[${student.id}]" 
+                            class="attendance-select"
+                        >
+                            <option value="Present" selected>Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Late">Late</option>
+                        </select>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        studentsList.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading students for attendance:', error);
+        studentsList.innerHTML = '<p>Error loading students</p>';
+    }
+}
+async function handleAttendanceSubmit(e) {
+    e.preventDefault();
+    const responseElement = document.getElementById('attendanceResponse');
+    
+    try {
+        const classId = document.getElementById('attendanceClass').value;
+        const date = document.getElementById('attendanceDate').value;
+        const subjectId = document.getElementById('attendanceSubject').value;
+        
+        // Collect attendance data
+        const attendanceData = [];
+        const enrolledStudents = await makeRequest(`/admin/enrollments?subject_id=${subjectId}`, 'GET');
+        
+        enrolledStudents.forEach(enrollment => {
+            const studentId = enrollment.student.id;
+            const statusSelect = document.getElementById(`attendance_${studentId}`);
+            if (statusSelect) {
+                attendanceData.push({
+                    class_id: classId,
+                    student_id: studentId,
+                    date: date,
+                    status: statusSelect.value,
+                    notes: '' // You can add notes input if needed
+                });
+            }
+        });
+        
+        // Save attendance records
+        for (const record of attendanceData) {
+            await makeRequest('/attendance', 'POST', record);
+        }
+        
+        showResponse(responseElement, `Attendance recorded for ${attendanceData.length} students`, 'success');
+        
+    } catch (error) {
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+// ===== GRADES FUNCTIONS =====
+
+async function loadGradesAssignments() {
+    const subjectId = document.getElementById('gradesSubject').value;
+    const assignmentSelect = document.getElementById('gradesAssignment');
+    
+    if (!subjectId) {
+        assignmentSelect.innerHTML = '<option value="">Select an assignment</option>';
+        return;
+    }
+    
+    try {
+        const assignments = await makeRequest(`/assignments?subject_id=${subjectId}`, 'GET');
+        assignmentSelect.innerHTML = '<option value="">Select an assignment</option>';
+        
+        assignments.forEach(assignment => {
+            const option = document.createElement('option');
+            option.value = assignment.id;
+            option.textContent = `${assignment.title} (Due: ${assignment.due_date})`;
+            assignmentSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading assignments:', error);
+    }
+}
+
+async function loadGradesStudents() {
+    const assignmentId = document.getElementById('gradesAssignment').value;
+    const subjectId = document.getElementById('gradesSubject').value;
+    const studentsList = document.getElementById('gradesStudentsList');
+    
+    if (!assignmentId || !subjectId) {
+        studentsList.innerHTML = '<p>Please select both subject and assignment</p>';
+        return;
+    }
+    
+    try {
+        // Get students enrolled in this subject
+        const enrolledStudents = await makeRequest(`/admin/enrollments?subject_id=${subjectId}`, 'GET');
+        
+        if (enrolledStudents.length === 0) {
+            studentsList.innerHTML = '<p>No students enrolled in this subject</p>';
+            return;
+        }
+        
+        let html = '<div style="display: grid; grid-template-columns: 1fr auto auto; gap: 15px; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0;">';
+        html += '<strong>Student Name</strong><strong>Score</strong><strong>Grade</strong>';
+        
+        // Load existing grades if any
+        const existingGrades = await makeRequest(`/grades?assignment_id=${assignmentId}`, 'GET');
+        const gradeMap = {};
+        existingGrades.forEach(grade => {
+            gradeMap[grade.student_id] = grade;
+        });
+        
+        enrolledStudents.forEach(enrollment => {
+            const student = enrollment.student;
+            const existingGrade = gradeMap[student.id];
+            
+            html += `
+                <div style="display: contents;">
+                    <label for="score_${student.id}" style="grid-column: 1;">${student.name}</label>
+                    <input type="number" id="score_${student.id}" name="scores[${student.id}]" 
+                           min="0" max="100" placeholder="0-100" style="grid-column: 2;"
+                           value="${existingGrade && existingGrade.score !== null ? existingGrade.score : ''}">
+                    <select id="grade_${student.id}" name="grades[${student.id}]" style="grid-column: 3;">
+                        <option value="">Select grade</option>
+                        <option value="A" ${existingGrade && existingGrade.grade === 'A' ? 'selected' : ''}>A</option>
+                        <option value="B" ${existingGrade && existingGrade.grade === 'B' ? 'selected' : ''}>B</option>
+                        <option value="C" ${existingGrade && existingGrade.grade === 'C' ? 'selected' : ''}>C</option>
+                        <option value="D" ${existingGrade && existingGrade.grade === 'D' ? 'selected' : ''}>D</option>
+                        <option value="F" ${existingGrade && existingGrade.grade === 'F' ? 'selected' : ''}>F</option>
+                    </select>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        studentsList.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading students for grades:', error);
+        studentsList.innerHTML = '<p>Error loading students</p>';
+    }
+}
+
+async function handleGradesSubmit(e) {
+    e.preventDefault();
+    const responseElement = document.getElementById('gradesResponse');
+    
+    try {
+        const assignmentId = document.getElementById('gradesAssignment').value;
+        const subjectId = document.getElementById('gradesSubject').value;
+        
+        // Collect grade data
+        const gradesData = [];
+        const enrolledStudents = await makeRequest(`/admin/enrollments?subject_id=${subjectId}`, 'GET');
+        
+        for (const enrollment of enrolledStudents) {
+            const studentId = enrollment.student.id;
+            const scoreInput = document.getElementById(`score_${studentId}`);
+            const gradeSelect = document.getElementById(`grade_${studentId}`);
+            
+            // Only save if at least one field is filled
+            if ((scoreInput && scoreInput.value) || (gradeSelect && gradeSelect.value)) {
+                gradesData.push({
+                    assignment_id: assignmentId,
+                    student_id: studentId,
+                    score: scoreInput.value ? parseInt(scoreInput.value) : null,
+                    grade: gradeSelect.value || null,
+                    feedback: ''
+                });
+            }
+        }
+        
+        // Save grade records
+        let savedCount = 0;
+        for (const gradeRecord of gradesData) {
+            await makeRequest('/grades', 'POST', gradeRecord);
+            savedCount++;
+        }
+        
+        if (savedCount > 0) {
+            showResponse(responseElement, `Grades saved for ${savedCount} student${savedCount !== 1 ? 's' : ''}`, 'success');
+        } else {
+            showResponse(responseElement, 'No grades were saved. Please enter at least a score or grade for at least one student.', 'error');
+        }
+        
+    } catch (error) {
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+    // MANAGEMENT FUNCTIONS WITH EDIT/DELETE
+    async function loadManagementData() {
+        try {
+            await loadSubjectsForManagement();
+            await loadStudentsForManagement();
+            await loadClassesForManagement();
+            await loadAssignmentsForManagement(); // ADD THIS LINE
+            setupManagementFormHandlers();
+        } catch (error) {
+            console.error('Error loading management data:', error);
+        }
+    }
+
+    function setupManagementFormHandlers() {
+        // Remove any existing listeners first
+        const editSubjectForm = document.getElementById('editSubjectForm');
+        const editStudentForm = document.getElementById('editStudentForm');
+        const editClassForm = document.getElementById('editClassForm');
+        
+        editSubjectForm.replaceWith(editSubjectForm.cloneNode(true));
+        editStudentForm.replaceWith(editStudentForm.cloneNode(true));
+        editClassForm.replaceWith(editClassForm.cloneNode(true));
+        
+        // Add new listeners
+        document.getElementById('editSubjectForm').addEventListener('submit', handleSubjectUpdate);
+        document.getElementById('editStudentForm').addEventListener('submit', handleStudentUpdate);
+        document.getElementById('editClassForm').addEventListener('submit', handleClassUpdate);
+    }
+
+    async function loadSubjectsForManagement() {
+        try {
+            const subjects = await makeRequest('/admin/subjects', 'GET');
+            const select = document.getElementById('manageSubjectSelect');
+            select.innerHTML = '<option value="">Select a subject to manage</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = `${subject.name}`;
+                select.appendChild(option);
+            });
+            
+            select.addEventListener('change', loadSubjectDetails);
+        } catch (error) {
+            console.error('Error loading subjects for management:', error);
+        }
+    }
+
+    async function loadStudentsForManagement() {
+        try {
+            const students = await makeRequest('/students', 'GET');
+            const select = document.getElementById('manageStudentSelect');
+            select.innerHTML = '<option value="">Select a student to manage</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.username})`;
+                select.appendChild(option);
+            });
+            
+            select.addEventListener('change', loadStudentDetails);
+        } catch (error) {
+            console.error('Error loading students for management:', error);
+        }
+    }
+
+    async function loadClassesForManagement() {
+        try {
+            const [classes, subjects] = await Promise.all([
+                makeRequest('/classes', 'GET'),
+                makeRequest('/admin/subjects', 'GET')
+            ]);
+            
+            // Sort classes by most recent first
+            const sortedClasses = classes.sort((a, b) => b.id - a.id);
+            
+            // Populate subject filter dropdown
+            const subjectFilter = document.getElementById('classSubjectFilter');
+            subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = `${subject.name}`;
+                subjectFilter.appendChild(option);
+            });
+            
+            // Populate class subject dropdown (for editing)
+            const subjectSelect = document.getElementById('editClassSubject');
+            subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject.id;
+                option.textContent = `${subject.name} `;
+                subjectSelect.appendChild(option);
+            });
+            
+            // Store classes for filtering
+            window.allClasses = sortedClasses;
+            
+            // Populate class dropdown with all classes initially
+            populateClassDropdown(sortedClasses);
+            
+            // Add event listener for subject filter
+            subjectFilter.addEventListener('change', filterClassesBySubject);
+            document.getElementById('manageClassSelect').addEventListener('change', loadClassDetails);
+            
+        } catch (error) {
+            console.error('Error loading classes for management:', error);
+        }
+    }
+
+    function populateClassDropdown(classes) {
+        const select = document.getElementById('manageClassSelect');
+        select.innerHTML = '<option value="">Select a class to manage</option>';
+        
+        classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls.id;
+            option.textContent = `${cls.code} - ${cls.name} (${cls.opening_date})`;
+            select.appendChild(option);
+        });
+    }
+
+    function filterClassesBySubject() {
+        const subjectId = this.value;
+        const allClasses = window.allClasses || [];
+        
+        if (!subjectId) {
+            // Show all classes
+            populateClassDropdown(allClasses);
+        } else {
+            // Filter classes by subject
+            const filteredClasses = allClasses.filter(cls => cls.subject_id == subjectId);
+            populateClassDropdown(filteredClasses);
+        }
+        
+        // Hide the edit section when filtering
+        document.getElementById('classManageSection').style.display = 'none';
+    }
+
+function setDefaultAttendanceDate() {
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('attendanceDate');
+    if (dateInput) {
+        dateInput.value = today;
+    }
+}
+
+
+    async function loadSubjectDetails() {
+        const subjectId = this.value;
+        const section = document.getElementById('subjectManageSection');
+        const responseElement = document.getElementById('subjectManageResponse');
+        
+        if (!subjectId) {
+            section.style.display = 'none';
+            responseElement.style.display = 'none';
+            return;
+        }
+        
+        try {
+            const subject = await makeRequest(`/admin/subjects/${subjectId}`, 'GET');
+            
+            document.getElementById('editSubjectName').value = subject.name || '';
+            document.getElementById('editSubjectProfessor').value = subject.professor || '';
+            document.getElementById('editTeacherEmail').value = subject.teacheremail || '';
+            document.getElementById('editTeacherTelephone').value = subject.teachertelephone || '';
+            document.getElementById('editSubjectDescription').value = subject.description || '';
+            
+            section.style.display = 'block';
+            responseElement.style.display = 'none';
+        } catch (error) {
+            console.error('Error loading subject details:', error);
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function loadStudentDetails() {
+        const studentId = this.value;
+        const section = document.getElementById('studentManageSection');
+        const responseElement = document.getElementById('studentManageResponse');
+        
+        if (!studentId) {
+            section.style.display = 'none';
+            responseElement.style.display = 'none';
+            return;
+        }
+        
+        try {
+            const student = await makeRequest(`/admin/students/${studentId}`, 'GET');
+            
+            document.getElementById('editStudentName').value = student.name || '';
+            document.getElementById('editStudentUsername').value = student.username || '';
+            document.getElementById('editStudentEmail').value = student.email || '';
+            document.getElementById('editStudentPassword').value = '';
+            
+            section.style.display = 'block';
+            responseElement.style.display = 'none';
+        } catch (error) {
+            console.error('Error loading student details:', error);
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function loadClassDetails() {
+        const classId = this.value;
+        const section = document.getElementById('classManageSection');
+        const responseElement = document.getElementById('classManageResponse');
+        
+        if (!classId) {
+            section.style.display = 'none';
+            responseElement.style.display = 'none';
+            return;
+        }
+        
+        try {
+            const cls = await makeRequest(`/classes/${classId}`, 'GET');
+            
+            // Populate form fields
+            document.getElementById('editClassSubject').value = cls.subject_id || '';
+            document.getElementById('editClassCode').value = cls.code || '';
+            document.getElementById('editClassName').value = cls.name || '';
+            
+            // Fix the dates - extract YYYY-MM-DD from ISO format
+            document.getElementById('editOpeningDate').value = cls.opening_date ? cls.opening_date.substring(0, 10) : '';
+            document.getElementById('editClosingDate').value = cls.closing_date ? cls.closing_date.substring(0, 10) : '';
+            
+            section.style.display = 'block';
+            responseElement.style.display = 'none';
+            
+        } catch (error) {
+            console.error('Error loading class details:', error);
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+async function loadClasses() {
+    try {
+        console.log('Loading classes...');
+        // This will be called when needed by your tab system
+    } catch (error) {
+        console.error('Error loading classes:', error);
+    }
+}
+
+async function loadStudents() {
+    try {
+        console.log('Loading students...');
+        const students = await makeRequest('/students', 'GET');
+        
+        // Populate student dropdowns
+        const studentDropdowns = [
+            document.getElementById('enrollStudent'),
+            document.getElementById('manageStudentSelect')
+        ];
+        
+        studentDropdowns.forEach(select => {
+            if (select) {
+                select.innerHTML = '<option value="">Select a student</option>';
+                students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.name} (${student.username})`;
+                    select.appendChild(option);
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error loading students:', error);
+    }
+}
+
+    // FORM HANDLERS
+    async function handleSubjectSubmit(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('subjectResponse');
+        
+        try {
+            const formData = {
+                name: document.getElementById('subjectName').value,
+                professor: document.getElementById('subjectProfessor').value,
+                teacheremail: document.getElementById('teacherEmail').value,
+                teachertelephone: document.getElementById('teacherTelephone').value,
+                description: document.getElementById('subjectDescription').value
+            };
+            
+            const result = await makeRequest('/admin/subjects', 'POST', formData);
+            showResponse(responseElement, result.message, 'success');
+            e.target.reset();
+            loadSubjects();
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleStudentSubmit(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('studentResponse');
+        
+        try {
+            const formData = {
+                name: document.getElementById('studentName').value,
+                username: document.getElementById('studentUsername').value,
+                email: document.getElementById('studentEmail').value,
+                password: document.getElementById('studentPassword').value
+            };
+            
+            const result = await makeRequest('/admin/students', 'POST', formData);
+            showResponse(responseElement, result.message, 'success');
+            e.target.reset();
+            loadEnrollmentDropdowns();
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleClassSubmit(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('classResponse');
+        
+        try {
+            const fileNames = classFiles.map(file => file.name).join(',');
+            const classData = {
+                code: document.getElementById('classCode').value,
+                name: document.getElementById('className').value,
+                subject_id: document.getElementById('classSubject').value,
+                opening_date: document.getElementById('openingDate').value,
+                closing_date: document.getElementById('closingDate').value,
+                file_names: fileNames
+            };
+            
+            const result = await makeRequest('/classes', 'POST', classData);
+            
+            if (result.classId && classFiles.length > 0) {
+                const formData = new FormData();
+                classFiles.forEach(file => formData.append('files', file));
+                await uploadFile(`/classes/${result.classId}/files`, formData);
+                showResponse(responseElement, `Class created successfully with ${classFiles.length} files uploaded.`, 'success');
+            } else {
+                showResponse(responseElement, result.message, 'success');
+            }
+            
+            e.target.reset();
+            classFiles = [];
+            document.getElementById('classFilesList').innerHTML = '';
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleEnrollmentSubmit(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('enrollmentResponse');
+        
+        try {
+            const formData = {
+                studentId: document.getElementById('enrollStudent').value,
+                subjectId: document.getElementById('enrollSubject').value
+            };
+            
+            const result = await makeRequest('/admin/enrollments', 'POST', formData);
+            showResponse(responseElement, result.message, 'success');
+            e.target.reset();
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleAssignmentSubmit(e) {
+    e.preventDefault();
+    const responseElement = document.getElementById('assignmentResponse');
+    
+    try {
+        const formData = {
+            subjectId: document.getElementById('assignmentSubject').value,
+            title: document.getElementById('assignmentTitle').value,
+            description: document.getElementById('assignmentDescription').value,
+            dueDate: document.getElementById('assignmentDueDate').value
+        };
+        
+        // Create assignment first
+        const result = await makeRequest('/admin/assignments', 'POST', formData);
+
+        // If there's a PDF to upload, do it now
+        if (assignmentPdf) {
+            try {
+                const formDataPdf = new FormData();
+                formDataPdf.append('assignmentPdf', assignmentPdf);
+                await uploadFile(`/admin/assignments/${result.assignmentId}/pdf`, formDataPdf);
+                showResponse(responseElement, 'Assignment created successfully with PDF uploaded.', 'success');
+            } catch (uploadError) {
+                // If PDF upload fails, delete the assignment that was created
+                await makeRequest(`/admin/assignments/${result.assignmentId}`, 'DELETE');
+                showResponse(responseElement, `Assignment creation failed: ${uploadError.message}`, 'error');
+                return; // Stop execution
+            }
+        } else {
+            showResponse(responseElement, result.message, 'success');
+        }
+        
+        // Reset form only on success
+        e.target.reset();
+        assignmentPdf = null;
+        document.getElementById('assignmentPdfList').innerHTML = '';
+        
+    } catch (error) {
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+    // UPDATE/DELETE HANDLERS
+    async function handleSubjectUpdate(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('subjectManageResponse');
+        const subjectId = document.getElementById('manageSubjectSelect').value;
+        
+        try {
+            const formData = {
+                name: document.getElementById('editSubjectName').value,
+                professor: document.getElementById('editSubjectProfessor').value,
+                teacheremail: document.getElementById('editTeacherEmail').value,
+                teachertelephone: document.getElementById('editTeacherTelephone').value,
+                description: document.getElementById('editSubjectDescription').value
+            };
+            
+            const result = await makeRequest(`/admin/subjects/${subjectId}`, 'PUT', formData);
+            showResponse(responseElement, result.message, 'success');
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleStudentUpdate(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('studentManageResponse');
+        const studentId = document.getElementById('manageStudentSelect').value;
+        
+        try {
+            const formData = {
+                name: document.getElementById('editStudentName').value,
+                username: document.getElementById('editStudentUsername').value,
+                email: document.getElementById('editStudentEmail').value,
+                password: document.getElementById('editStudentPassword').value || undefined
+            };
+            
+            const result = await makeRequest(`/admin/students/${studentId}`, 'PUT', formData);
+            showResponse(responseElement, result.message, 'success');
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function handleClassUpdate(e) {
+        e.preventDefault();
+        const responseElement = document.getElementById('classManageResponse');
+        const classId = document.getElementById('manageClassSelect').value;
+        
+        try {
+            const formData = {
+                code: document.getElementById('editClassCode').value,
+                name: document.getElementById('editClassName').value,
+                subject_id: document.getElementById('editClassSubject').value,
+                opening_date: document.getElementById('editOpeningDate').value,
+                closing_date: document.getElementById('editClosingDate').value
+            };
+            
+            const result = await makeRequest(`/classes/${classId}`, 'PUT', formData);
+            showResponse(responseElement, result.message, 'success');
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function deleteSubject() {
+        const subjectId = document.getElementById('manageSubjectSelect').value;
+        const responseElement = document.getElementById('subjectManageResponse');
+        
+        if (!subjectId || !confirm('Are you sure you want to delete this subject? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const result = await makeRequest(`/admin/subjects/${subjectId}`, 'DELETE');
+            showResponse(responseElement, result.message, 'success');
+            
+            // Reload the dropdown
+            await loadSubjectsForManagement();
+            document.getElementById('subjectManageSection').style.display = 'none';
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function deleteStudent() {
+        const studentId = document.getElementById('manageStudentSelect').value;
+        const responseElement = document.getElementById('studentManageResponse');
+        
+        if (!studentId || !confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const result = await makeRequest(`/admin/students/${studentId}`, 'DELETE');
+            showResponse(responseElement, result.message, 'success');
+            
+            // Reload the dropdown
+            await loadStudentsForManagement();
+            document.getElementById('studentManageSection').style.display = 'none';
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    async function deleteClass() {
+        const classId = document.getElementById('manageClassSelect').value;
+        const responseElement = document.getElementById('classManageResponse');
+        
+        if (!classId || !confirm('Are you sure you want to delete this class? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const result = await makeRequest(`/classes/${classId}`, 'DELETE');
+            showResponse(responseElement, result.message, 'success');
+            
+            // Reload the dropdown
+            await loadClassesForManagement();
+            document.getElementById('classManageSection').style.display = 'none';
+        } catch (error) {
+            showResponse(responseElement, `Error: ${error.message}`, 'error');
+        }
+    }
+
+    function showResponse(element, message, type) {
+        element.textContent = message;
+        element.className = `response ${type}`;
+        element.style.display = 'block';
+    }
+// Assignment Management Functions
+async function loadAssignmentsForManagement() {
+    try {
+        const assignments = await makeRequest('/assignments', 'GET');
+        const subjects = await makeRequest('/admin/subjects', 'GET');
+        
+        // Sort assignments by most recent first
+        const sortedAssignments = assignments.sort((a, b) => b.id - a.id);
+        
+        // Populate subject filter dropdown
+        const subjectFilter = document.getElementById('assignmentSubjectFilter');
+        subjectFilter.innerHTML = '<option value="">All Subjects</option>';
+        subjects.forEach(subject => {
+            const option = document.createElement('option');
+            option.value = subject.id;
+            option.textContent = `${subject.name}`;
+            subjectFilter.appendChild(option);
+        });
+        
+        // Store assignments for filtering
+        window.allAssignments = sortedAssignments;
+        
+        // Populate assignment dropdown with all assignments initially
+        populateAssignmentDropdown(sortedAssignments, subjects);
+        
+        // Add event listener for subject filter
+        subjectFilter.addEventListener('change', filterAssignmentsBySubject);
+        document.getElementById('manageAssignmentSelect').addEventListener('change', loadAssignmentDetails);
+        
+    } catch (error) {
+        console.error('Error loading assignments for management:', error);
+    }
+}
+
+function populateAssignmentDropdown(assignments, subjects) {
+    const select = document.getElementById('manageAssignmentSelect');
+    select.innerHTML = '<option value="">Select an assignment to manage</option>';
+    
+    // Create a map of subject IDs to subject names for quick lookup
+    const subjectMap = {};
+    subjects.forEach(subject => {
+        subjectMap[subject.id] = subject.name;
+    });
+    
+    assignments.forEach(assignment => {
+        const option = document.createElement('option');
+        option.value = assignment.id;
+        const subjectName = subjectMap[assignment.subject_id] || 'Unknown Subject';
+        option.textContent = `${assignment.title} (${subjectName} - Due: ${assignment.due_date})`;
+        select.appendChild(option);
+    });
+}
+
+function filterAssignmentsBySubject() {
+    const subjectId = this.value;
+    const allAssignments = window.allAssignments || [];
+    const subjects = window.allSubjects || [];
+    
+    if (!subjectId) {
+        // Show all assignments
+        populateAssignmentDropdown(allAssignments, subjects);
+    } else {
+        // Filter assignments by subject
+        const filteredAssignments = allAssignments.filter(assignment => assignment.subject_id == subjectId);
+        populateAssignmentDropdown(filteredAssignments, subjects);
+    }
+    
+    // Hide the edit section when filtering
+    document.getElementById('assignmentManageSection').style.display = 'none';
+}
+
+async function loadAssignmentDetails() {
+    const assignmentId = this.value;
+    const section = document.getElementById('assignmentManageSection');
+    const responseElement = document.getElementById('assignmentManageResponse');
+    
+    if (!assignmentId) {
+        section.style.display = 'none';
+        responseElement.style.display = 'none';
+        return;
+    }
+    
+    try {
+        const assignment = await makeRequest(`/assignments/${assignmentId}`, 'GET');
+        
+        // Populate form fields
+        document.getElementById('editAssignmentTitle').value = assignment.title || '';
+        document.getElementById('editAssignmentDescription').value = assignment.description || '';
+        document.getElementById('editAssignmentDueDate').value = assignment.due_date ? assignment.due_date.substring(0, 10) : '';
+        
+        section.style.display = 'block';
+        responseElement.style.display = 'none';
+        
+    } catch (error) {
+        console.error('Error loading assignment details:', error);
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+async function deleteAssignment() {
+    const assignmentId = document.getElementById('manageAssignmentSelect').value;
+    const responseElement = document.getElementById('assignmentManageResponse');
+    
+    if (!assignmentId || !confirm('Are you sure you want to delete this assignment? This will also delete all grades associated with this assignment. This action cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const result = await makeRequest(`/admin/assignments/${assignmentId}`, 'DELETE');
+        showResponse(responseElement, result.message, 'success');
+        
+        // Reload the dropdown
+        await loadAssignmentsForManagement();
+        document.getElementById('assignmentManageSection').style.display = 'none';
+    } catch (error) {
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+// Add assignment update handler
+document.getElementById('editAssignmentForm').addEventListener('submit', handleAssignmentUpdate);
+
+async function handleAssignmentUpdate(e) {
+    e.preventDefault();
+    const responseElement = document.getElementById('assignmentManageResponse');
+    const assignmentId = document.getElementById('manageAssignmentSelect').value;
+    
+    try {
+        const formData = {
+            title: document.getElementById('editAssignmentTitle').value,
+            description: document.getElementById('editAssignmentDescription').value,
+            due_date: document.getElementById('editAssignmentDueDate').value
+        };
+        
+        // You'll need to add an update route for assignments in your admin.js
+        const result = await makeRequest(`/admin/assignments/${assignmentId}`, 'PUT', formData);
+        showResponse(responseElement, result.message, 'success');
+    } catch (error) {
+        showResponse(responseElement, `Error: ${error.message}`, 'error');
+    }
+}
+
+// Example of how to display submission info in admin panel
+function displaySubmission(submission) {
+    return `
+        <div class="submission-item">
+            <h4>${submission.assignment_title}</h4>
+            <p><strong>Student:</strong> ${submission.student_name} (${submission.student_username})</p>
+            <p><strong>Submitted:</strong> ${new Date(submission.submission_date).toLocaleString()}</p>
+            <p><strong>File:</strong> 
+                <a href="/api/submissions/${submission.id}/files/${submission.submission_file}" 
+                   download="${submission.student_name}_${submission.assignment_title}.pdf">
+                   📄 Download Submission
+                </a>
+            </p>
+        </div>
+    `;
+}
+
+</script>
+</body>
+</html>
