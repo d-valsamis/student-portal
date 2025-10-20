@@ -92,9 +92,9 @@ router.post('/:id/files', upload.array('files', 10), async (req, res) => {
 
         // 1. Get current file names from the database
         const classResult = await db.query('SELECT file_names FROM classes WHERE id = $1', [classId]);
-        let currentFileNames = [];
+        let currentFileNames = '';
         if (classResult.rows.length > 0 && classResult.rows[0].file_names) {
-            currentFileNames = classResult.rows[0].file_names.split(',');
+            currentFileNames = classResult.rows[0].file_names;
         }
 
         // 2. Add new file names to the list as pairs: originalName,systemName
@@ -109,7 +109,7 @@ router.post('/:id/files', upload.array('files', 10), async (req, res) => {
         res.json({
             message: 'Files uploaded successfully',
             fileCount: files.length,
-            fileNames: newFileNames
+            fileNames: newFilePairs  // FIXED: Changed from newFileNames to newFilePairs
         });
 
     } catch (error) {
@@ -117,7 +117,6 @@ router.post('/:id/files', upload.array('files', 10), async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 // Get file information for a specific class - FIXED VERSION
 router.get('/:id/files', async (req, res) => {
     try {
@@ -344,4 +343,5 @@ router.post('/:id/files/add', upload.array('files', 10), async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 module.exports = router;
