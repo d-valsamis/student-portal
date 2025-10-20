@@ -90,6 +90,41 @@ router.post('/', auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+// Upload PDF for an assignment
+router.post('/:id/pdf', auth, upload.single('assignmentPdf'), async (req, res) => {
+    try {
+        const assignmentId = req.params.id;
+        
+        console.log('=== ASSIGNMENT PDF UPLOAD DEBUG ===');
+        console.log('Assignment ID:', assignmentId);
+        console.log('Uploaded file:', req.file);
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        // Store both original and system name in format: "Original Name,System Name"
+        const systemName = req.file.filename;
+        const originalName = req.file.originalname;
+        const fileNames = `${originalName},${systemName}`;
+
+        // Update the assignment with the file path
+        await pool.query(
+            'UPDATE assignments SET pdf_path = $1 WHERE id = $2',
+            [fileNames, assignmentId]
+        );
+
+        res.json({ 
+            message: 'PDF uploaded successfully',
+            filePath: `/uploads/assignments/${systemName}`,
+            originalName: originalName
+        });
+
+    } catch (error) {
+        console.error('Error uploading assignment PDF:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 // Get assignments for a student with submission status (student)
 router.get('/students/:id/assignments', auth, async (req, res) => {
     try {
@@ -193,6 +228,7 @@ router.get('/:id/files/:filename', auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 
 module.exports = router;
